@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Любимая Милана</title>
+  <link rel="preconnect" href="https://googleapis.com">
+  <link rel="preconnect" href="https://gstatic.com" crossorigin>
+  <link href="https://googleapis.com/css2?family=Montserrat:wght@600;800&family=Rubik+Bubbles&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: linear-gradient(135deg, #ffe4ec 0%, #ffc2d4 50%, #ffb3c6 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 20px;
+      overflow-x: hidden;
+      position: relative;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .bg-decorations {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .paw {
+      position: absolute;
+      width: 45px;
+      height: 45px;
+      fill: rgba(255, 77, 141, 0.25);
+      filter: drop-shadow(0 2px 4px rgba(255, 255, 255, 0.4));
+    }
+
+    .star {
+      position: absolute;
+      fill: #ffffff;
+      filter: drop-shadow(0 0 6px #ff4d8d) drop-shadow(0 0 12px #ffffff);
+      animation: twinkle 2.5s infinite ease-in-out alternate;
+    }
+
+    @keyframes twinkle {
+      0% { opacity: 0.2; transform: scale(0.7) rotate(0deg); }
+      100% { opacity: 1; transform: scale(1.2) rotate(20deg); }
+    }
+
+    /* Слой для полароидов кота */
+    .cats-layer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .cat-polaroid {
+      position: absolute;
+      width: 115px;
+      background: #ffffff;
+      padding: 6px 6px 20px 6px;
+      border-radius: 8px;
+      box-shadow: 0 8px 20px rgba(136, 14, 79, 0.28);
+      border: 2px solid #ffe4ec;
+      pointer-events: auto;
+      cursor: pointer;
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+    }
+
+    .cat-polaroid img {
+      width: 100%;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 4px;
+      display: block;
+    }
+
+    .cat-polaroid:hover {
+      transform: scale(2.2) rotate(0deg) !important;
+      z-index: 60;
+      box-shadow: 0 15px 35px rgba(255, 20, 100, 0.5);
+    }
+
+    @media (max-width: 768px) {
+      .cat-polaroid {
+        width: 75px;
+        padding: 4px 4px 12px 4px;
+      }
+      .cat-polaroid img {
+        height: 65px;
+      }
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 35px;
+      position: relative;
+      z-index: 3;
+    }
+
+    .glitter-text {
+      font-family: 'Rubik Bubbles', cursive, sans-serif;
+      font-size: clamp(3rem, 9vw, 6.5rem);
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      line-height: 1.1;
+      background-image: 
+        radial-gradient(circle, #ffffff 1.5px, transparent 2px),
+        radial-gradient(circle, #fff0f5 1px, transparent 1.5px),
+        linear-gradient(45deg, #ff4d8d, #ff85b3, #ffffff, #ff1e6e, #ff99c2);
+      background-size: 16px 16px, 11px 11px, 300% 300%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      filter: drop-shadow(0 4px 15px rgba(255, 20, 100, 0.35));
+      animation: shimmer 4s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: 0 0, 5px 5px, 0% 50%; }
+      50% { background-position: 16px 16px, -6px 11px, 100% 50%; }
+      100% { background-position: 0 0, 5px 5px, 0% 50%; }
+    }
+
+    .buttons-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 30px;
+      max-width: 950px;
+      position: relative;
+      z-index: 3;
+    }
+
+    .star-btn-wrapper {
+      filter: drop-shadow(0 12px 22px rgba(194, 0, 86, 0.42));
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.3s ease;
+    }
+
+    .star-btn-wrapper:hover {
+      transform: translateY(-8px) scale(1.08) rotate(-3deg);
+      filter: drop-shadow(0 18px 32px rgba(255, 0, 110, 0.7));
+    }
+
+    .star-btn {
+      width: 255px;
+      height: 255px;
+      border: none;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 68px 62px 54px 62px;
+      clip-path: polygon(
+        50% 0%,
+        63% 35%,
+        98% 35%,
+        70% 57%,
+        80% 92%,
+        50% 71%,
+        20% 92%,
+        30% 57%,
+        2% 35%,
+        37% 35%
+      );
+      background: linear-gradient(
+        135deg,
+        #ff1476 0%,
+        #ff7eb3 22%,
+        #b8004c 48%,
+        #ff4da6 74%,
+        #8a0038 100%
+      );
+      background-size: 250% 250%;
+      animation: metallicFlow 4s ease-in-out infinite alternate;
+      color: #ffffff;
+      font-family: 'Rubik Bubbles', cursive, sans-serif;
+      font-size: 1.12rem;
+      line-height: 1.15;
+      letter-spacing: 0.3px;
+      text-shadow: 0 2px 6px rgba(110, 0, 45, 0.95), 0 0 14px rgba(255, 255, 255, 0.65);
+    }
+
+    .star-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(circle, #ffffff 0%, rgba(255,255,255,0.8) 25%, transparent 65%),
+        radial-gradient(circle, #fff0f8 0%, rgba(255,180,220,0.7) 25%, transparent 65%),
+        radial-gradient(circle, #ffffff 0%, transparent 60%);
+      background-size: 26px 26px, 34px 34px, 19px 19px;
+      background-position: 0 0, 14px 18px, 7px 9px;
+      mix-blend-mode: overlay;
+      animation: glitterTwinkle 1.4s ease-in-out infinite alternate;
+      pointer-events: none;
+    }
+
+    .star-btn::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -130%;
+      width: 90%;
+      height: 200%;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.15) 25%,
+        rgba(255, 255, 255, 0.9) 50%,
+        rgba(255, 255, 255, 0.15) 75%,
+        transparent 100%
+      );
+      transform: rotate(28deg);
+      animation: starShineSweep 2.8s infinite ease-in-out;
+      pointer-events: none;
+    }
+
+    @keyframes metallicFlow {
+      0% { background-position: 0% 20%; }
+      100% { background-position: 100% 80%; }
+    }
+
+    @keyframes glitterTwinkle {
+      0% { opacity: 0.35; transform: scale(0.98); }
+      100% { opacity: 1; transform: scale(1.03); }
+    }
+
+    @keyframes starShineSweep {
+      0% { left: -130%; }
+      45% { left: 165%; }
+      100% { left: 165%; }
+    }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(136, 14, 79, 0.45);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 100;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-card {
+      background: linear-gradient(180deg, #ffffff 0%, #fff0f5 100%);
+      border: 3px solid #ffc2d4;
+      border-radius: 28px;
+      max-width: 550px;
+      width: 100%;
+      padding: 25px;
+      position: relative;
+      box-shadow: 0 20px 50px rgba(136, 14, 79, 0.3);
+      text-align: center;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 15px;
+      right: 18px;
+      background: #ffe4ec;
+      border: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      font-size: 1.3rem;
+      color: #d81b60;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .modal-title {
+      font-family: 'Rubik Bubbles', cursive, sans-serif;
+      color: #ff1e6e;
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+      padding-right: 25px;
+    }
+
+    .album-box {
+      position: relative;
+      margin-bottom: 15px;
+    }
+
+    .album-box img {
+      width: 100%;
+      max-height: 380px;
+      object-fit: cover;
+      border-radius: 18px;
+      display: block;
+    }
+
+    .modal-media video,
+    .album-box video {
+      width: 100%;
+      max-height: 60vh;
+      object-fit: contain;
+      background: #000000;
+      border-radius: 18px;
+      display: block;
+      margin-bottom: 15px;
+    }
+
+    .nav-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.85);
+      border: 2px solid #ffc2d4;
+      color: #d81b60;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      z-index: 5;
+    }
+
+    .nav-arrow:hover {
+      background: #ff4d8d;
+      color: #ffffff;
+    }
+
+    .prev-arrow { left: 10px; }
+    .next-arrow { right: 10px; }
+
+    .photo-counter {
+      font-size: 0.9rem;
+      color: #d81b60;
+      font-weight: 700;
+      margin-top: 8px;
+    }
+
+    .modal-text {
+      color: #5c1636;
+      font-size: 1.05rem;
+      line-height: 1.6;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-decorations" id="bgDecor"></div>
+  <div class="cats-layer" id="catsLayer"></div>
+
+  <header class="hero">
+    <h1 class="glitter-text">ЛЮБИМАЯ МИЛАНА</h1>
+  </header>
+
+  <div class="buttons-grid" id="buttonsContainer"></div>
+
+  <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+    <div class="modal-card">
+      <button class="close-btn" onclick="forceClose()">✕</button>
+      <h2 class="modal-title" id="modalTitle"></h2>
+      <div class="modal-media" id="modalMedia"></div>
+      <p class="modal-text" id="modalText"></p>
+    </div>
+  </div>
+
+  <script>
+            var gifts = [
+      {
+        btnLabel: 'Мы с тобой',
+        title: 'Наши теплые моменты',
+        type: 'album',
+        files: ['1.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg', '6.jpg'],
+        wish: 'Милана, пусть таких счастливых моментов в твоей жизни будет бесконечно много! Листай стрелочками ✨'
+      },
+      {
+        btnLabel: 'Слова от коллег',
+        title: 'Теплые слова от коллег',
+        type: 'video',
+        file: 'video1.mp4',
+        wish: 'Вся наша команда кофейни очень тебя любит и желает самого сладкого и яркого года! 💖'
+      },
+      {
+        btnLabel: 'Дилюк лох',
+        title: '',
+        type: 'album',
+        slides: [
+          {
+            file: 'diluc.jpg',
+            caption: 'Твой любимый Дилюк, желаю тебе С6'
+          },
+          {
+            file: 'gamma.jpg',
+            caption: 'Я о нем ничего не знаю, но желаю тебе побольше снов с ним'
+          },
+          {
+            file: 'toy.jpg',
+            caption: 'Я знаю, как тебе тяжело с твоим расстройством, но я всегда рядом'
+          },
+          {
+            file: 'we.mp4',
+            caption: 'Мы'
+          }
+        ]
+      }
+    ];
+
+    var buttonsContainer = document.getElementById('buttonsContainer');
+    var modalOverlay = document.getElementById('modalOverlay');
+    var modalTitle = document.getElementById('modalTitle');
+    var modalMedia = document.getElementById('modalMedia');
+    var modalText = document.getElementById('modalText');
+
+    var currentAlbum = [];
+    var currentPhotoIndex = 0;
+
+    for (var i = 0; i < gifts.length; i++) {
+      (function(index) {
+        var wrapper = document.createElement('div');
+        wrapper.className = 'star-btn-wrapper';
+
+        var btn = document.createElement('button');
+        btn.className = 'star-btn';
+        btn.textContent = gifts[index].btnLabel;
+        btn.onclick = function() { openGift(index); };
+
+        wrapper.appendChild(btn);
+        buttonsContainer.appendChild(wrapper);
+      })(i);
+    }
+
+    function openGift(index) {
+      var item = gifts[index];
+      if (item.type === 'empty') return;
+
+      modalTitle.textContent = item.title || '';
+      modalTitle.style.display = item.title ? 'block' : 'none';
+      modalText.textContent = item.wish || '';
+      modalMedia.innerHTML = '';
+
+      if (item.type === 'album') {
+        if (item.slides) {
+          currentAlbum = item.slides;
+        } else {
+          currentAlbum = [];
+          for (var f = 0; f < item.files.length; f++) {
+            currentAlbum.push({ file: item.files[f], caption: item.wish });
+          }
+        }
+        currentPhotoIndex = 0;
+        renderAlbumItem();
+      } else if (item.type === 'video') {
+        modalMedia.innerHTML = '<video controls autoplay src="' + item.file + '"></video>';
+      }
+
+      modalOverlay.classList.add('active');
+    }
+
+    function renderAlbumItem() {
+      var total = currentAlbum.length;
+      var slide = currentAlbum[currentPhotoIndex];
+      var src = slide.file;
+      modalText.textContent = slide.caption || '';
+
+      var arrows = '';
+      if (total > 1) {
+        arrows = '<button class="nav-arrow prev-arrow" onclick="changePhoto(-1)">❮</button>' +
+                 '<button class="nav-arrow next-arrow" onclick="changePhoto(1)">❯</button>';
+      }
+
+      var isVideo = src.toLowerCase().endsWith('.mp4') || src.toLowerCase().endsWith('.mov');
+      var mediaTag = isVideo
+        ? '<video controls autoplay src="' + src + '"></video>'
+        : '<img src="' + src + '" alt="Фото">';
+
+      modalMedia.innerHTML =
+        '<div class="album-box">' +
+          mediaTag +
+          arrows +
+          '<div class="photo-counter">' + (currentPhotoIndex + 1) + ' из ' + total + '</div>' +
+        '</div>';
+    }
+
+    function changePhoto(step) {
+      currentPhotoIndex = (currentPhotoIndex + step + currentAlbum.length) % currentAlbum.length;
+      renderAlbumItem();
+    }
+
+    function openIgor() {
+      modalTitle.textContent = 'Игорь';
+      modalTitle.style.display = 'block';
+      modalText.textContent = '';
+      modalMedia.innerHTML =
+        '<div class="album-box">' +
+          '<img src="igor.jpg" alt="Игорь" style="max-height: 60vh; object-fit: contain;">' +
+        '</div>';
+      modalOverlay.classList.add('active');
+    }
+
+    function forceClose() {
+      modalOverlay.classList.remove('active');
+      modalMedia.innerHTML = '';
+    }
+
+    function closeModal(event) {
+      if (event.target === modalOverlay) {
+        forceClose();
+      }
+    }
+
+    var catPhotos = [
+      'cat1.jpg',
+      'cat2.jpg',
+      'cat3.jpg',
+      'cat4.jpg',
+      'cat5.jpg',
+      'cat6.jpg',
+      'cat7.jpg'
+    ];
+
+    var catSpots = [
+      { top: '6%', left: '3%' },
+      { top: '38%', left: '2%' },
+      { top: '72%', left: '4%' },
+      { top: '6%', right: '3%' },
+      { top: '38%', right: '2%' },
+      { top: '72%', right: '4%' },
+      { top: '82%', left: '45%' }
+    ];
+
+    var catsLayer = document.getElementById('catsLayer');
+
+    for (var c = 0; c < catPhotos.length; c++) {
+      var spot = catSpots[c % catSpots.length];
+      var card = document.createElement('div');
+      card.className = 'cat-polaroid';
+
+      if (spot.top) card.style.top = spot.top;
+      if (spot.left) card.style.left = spot.left;
+      if (spot.right) card.style.right = spot.right;
+
+      var tilt = Math.floor(Math.random() * 28) - 14;
+      card.style.transform = 'rotate(' + tilt + 'deg)';
+
+      card.innerHTML = '<img src="' + catPhotos[c] + '" alt="Котик">';
+      catsLayer.appendChild(card);
+    }
+
+    var bgDecor = document.getElementById('bgDecor');
+    var pawSvg = '<svg viewBox="0 0 100 100"><ellipse cx="50" cy="65" rx="22" ry="18"/><ellipse cx="24" cy="40" rx="9" ry="12" transform="rotate(-20 24 40)"/><ellipse cx="42" cy="28" rx="9" ry="13" transform="rotate(-5 42 28)"/><ellipse cx="60" cy="28" rx="9" ry="13" transform="rotate(5 60 28)"/><ellipse cx="77" cy="40" rx="9" ry="12" transform="rotate(20 77 40)"/></svg>';
+    var starSvg = '<svg viewBox="0 0 24 24"><path d="M12 0L14.8 9.2L24 12L14.8 14.8L12 24L9.2 14.8L0 12L9.2 9.2L12 0Z"/></svg>';
+
+    for (var p = 0; p < 18; p++) {
+      var paw = document.createElement('div');
+      paw.className = 'paw';
+      paw.innerHTML = pawSvg;
+      paw.style.left = (Math.random() * 94) + '%';
+      paw.style.top = (Math.random() * 94) + '%';
+      var angle = Math.floor(Math.random() * 360);
+      var scale = (0.7 + Math.random() * 0.6).toFixed(2);
+      paw.style.transform = 'rotate(' + angle + 'deg) scale(' + scale + ')';
+      bgDecor.appendChild(paw);
+    }
+
+    for (var s = 0; s < 35; s++) {
+      var star = document.createElement('div');
+      star.className = 'star';
+      star.innerHTML = starSvg;
+      var size = Math.floor(10 + Math.random() * 18);
+      star.style.width = size + 'px';
+      star.style.height = size + 'px';
+      star.style.left = (Math.random() * 98) + '%';
+      star.style.top = (Math.random() * 98) + '%';
+      star.style.animationDelay = (Math.random() * 3).toFixed(1) + 's';
+      star.style.animationDuration = (1.5 + Math.random() * 2).toFixed(1) + 's';
+      bgDecor.appendChild(star);
+    }    var sunBtn = document.createElement('button');
+    sunBtn.className = 'sunflower-btn';
+    sunBtn.title = 'Нажми на меня';
+    sunBtn.onclick = openIgor;
+    sunBtn.innerHTML = '<svg viewBox="0 0 100 100" width="100%" height="100%">' +
+      '<g fill="#FFD54F" stroke="#FFA000" stroke-width="1.5">' +
+        '<ellipse cx="50" cy="14" rx="7" ry="15"/><ellipse cx="50" cy="86" rx="7" ry="15"/>' +
+        '<ellipse cx="14" cy="50" rx="15" ry="7"/><ellipse cx="86" cy="50" rx="15" ry="7"/>' +
+        '<ellipse cx="24" cy="24" rx="7" ry="15" transform="rotate(-45 24 24)"/>' +
+        '<ellipse cx="76" cy="76" rx="7" ry="15" transform="rotate(-45 76 76)"/>' +
+        '<ellipse cx="76" cy="24" rx="7" ry="15" transform="rotate(45 76 24)"/>' +
+        '<ellipse cx="24" cy="76" rx="7" ry="15" transform="rotate(45 24 76)"/>' +
+        '<ellipse cx="36" cy="16" rx="6" ry="14" transform="rotate(-22 36 16)"/>' +
+        '<ellipse cx="64" cy="84" rx="6" ry="14" transform="rotate(-22 64 84)"/>' +
+        '<ellipse cx="64" cy="16" rx="6" ry="14" transform="rotate(22 64 16)"/>' +
+        '<ellipse cx="36" cy="84" rx="6" ry="14" transform="rotate(22 36 84)"/>' +
+        '<ellipse cx="16" cy="36" rx="14" ry="6" transform="rotate(-22 16 36)"/>' +
+        '<ellipse cx="84" cy="64" rx="14" ry="6" transform="rotate(-22 84 64)"/>' +
+        '<ellipse cx="84" cy="36" rx="14" ry="6" transform="rotate(22 84 36)"/>' +
+        '<ellipse cx="16" cy="64" rx="14" ry="6" transform="rotate(22 16 64)"/>' +
+      '</g>' +
+      '<circle cx="50" cy="50" r="22" fill="#5D4037" stroke="#3E2723" stroke-width="2"/>' +
+      '<circle cx="50" cy="50" r="16" fill="#4E342E" stroke="#8D6E63" stroke-width="1.5" stroke-dasharray="3 3"/>' +
+    '</svg>';
+    document.body.appendChild(sunBtn);
+
+  </script>
+
+</body>
+</html>
